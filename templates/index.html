@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>GREEN API – Interface</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      display: flex;
+      flex-direction: row;
+      gap: 40px;
+    }
+
+    .forms {
+      flex: 1;
+      max-width: 350px;
+    }
+
+    .result {
+      flex: 1;
+    }
+
+    h1 {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    input, button {
+      display: block;
+      width: 100%;
+      margin: 4px 0;
+      padding: 6px;
+      box-sizing: border-box;
+    }
+
+    form {
+      margin-bottom: 15px;
+    }
+
+    pre {
+      background: #f4f4f4;
+      padding: 10px;
+      border: 1px solid #ccc;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="forms">
+    <h1>GREEN API Interface</h1>
+    <input type="text" id="idInstance" placeholder="idInstance" required />
+    <input type="text" id="token" placeholder="ApiTokenInstance" required />
+
+    <form onsubmit="submitForm(event, '/get_settings')">
+      <button type="submit">Get Settings</button>
+    </form>
+
+    <form onsubmit="submitForm(event, '/get_state_instance')">
+      <button type="submit">Get State</button>
+    </form>
+
+    <form onsubmit="submitForm(event, '/send_message')">
+      <input type="text" name="chatId" placeholder="7058278827@c.us" required />
+      <input type="text" name="message" placeholder="test" required />
+      <button type="submit">Send</button>
+    </form>
+
+    <form onsubmit="submitForm(event, '/send_file_by_url')">
+      <input type="text" name="chatId" placeholder="chatId (e.g. 7707...@c.us)" required />
+      <input type="text" name="url_file" placeholder="File URL" required />
+      <input type="text" name="file_name" placeholder="file.pdf" required />
+      <button type="submit">Send File</button>
+    </form>
+  </div>
+
+  <div class="result">
+    <h2>📦 Ответ:</h2>
+    <pre id="responseBox">Здесь будет ответ...</pre>
+  </div>
+
+  <script>
+    async function submitForm(event, endpoint) {
+      event.preventDefault();
+      const form = event.target;
+      const idInstance = document.getElementById('idInstance').value;
+      const token = document.getElementById('token').value;
+
+      const formData = new FormData(form);
+      formData.append('id_instance', idInstance);
+      formData.append('token', token);
+
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        body: formData,
+      });
+
+      const text = await response.text();
+      document.getElementById('responseBox').textContent = text;
+    }
+  </script>
+</body>
+</html>
